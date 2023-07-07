@@ -1,2 +1,2 @@
 # MIDI
-Various MIDI Projects
+Various MIDI projects using Python MIDI libraries(mido, python-rtmidi,...)
