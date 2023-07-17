@@ -1,0 +1,6 @@
+{
+    "Inport"       : "Circuit",
+    "Inport_cc"    : 7,
+    "Outport"      : "loop",
+    "Outport_cc"   : 2
+}
