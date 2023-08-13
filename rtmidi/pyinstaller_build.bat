@@ -1,0 +1,1 @@
+pyinstaller -F -w -i=DIN-MIDI_port.ico MIDI_CC_Translator.py
