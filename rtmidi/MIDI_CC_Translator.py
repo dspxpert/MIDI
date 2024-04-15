@@ -10969,8 +10969,10 @@ def start_cmd():
         if msg_and_dt:
             # unpack the msg and time tuple
             (msg, dt) = msg_and_dt
-            if msg[0] == 0xB0 and msg[1] == inport_cc.get():
-                msg[1] = outport_cc.get()
+            if (msg[0] & 0x0F) == (inport_ch.get()-1): # channel matched inport_ch
+                msg[0] = (msg[0] & 0xF0) | (outport_ch.get()-1) # change channel to outport_ch
+                if (msg[0] & 0xF0) == 0xB0 and msg[1] == inport_cc.get(): # changel cc to output_cc
+                    msg[1] = outport_cc.get()
             # convert the command integer to a hex so it's easier to read
             midi_out.send_message(msg)
             command = hex(msg[0])
@@ -11022,11 +11024,15 @@ root.title('MIDI CC Translator')
 root.iconbitmap(default=ICON_PATH)
 root.resizable(False, False)
 
+inport_ch = tk.IntVar()
+outport_ch = tk.IntVar()
 inport_cc = tk.IntVar()
 outport_cc = tk.IntVar()
 status_msg = tk.StringVar()
 status_msg.set('Press START...')
 
+inport_ch.set(CONFIG['Inport_ch'])
+outport_ch.set(CONFIG['Outport_ch'])
 inport_cc.set(CONFIG['Inport_cc'])
 outport_cc.set(CONFIG['Outport_cc'])
 
@@ -11047,17 +11053,31 @@ combo_outport.grid(row=1, column=2, columnspan=2, sticky='w')
 combo_outport.config(font=('Arial', 10))
 combo_outport.current(outport_index)
 
+lbl_inport_ch = ttk.Label(root, text='CH')
+lbl_inport_ch.grid(row=2, column=0, sticky='e')
+lbl_inport_ch.config(font=('Arial', 10))
+entry_inport_ch = ttk.Entry(root, text=inport_ch, width = 5)
+entry_inport_ch.grid(row=2, column=1, sticky='e')
+entry_inport_ch.config(font=('Arial', 10))
+lbl_outport_ch = ttk.Label(root, text='→    CH')
+lbl_outport_ch.grid(row=2, column=2, sticky='e')
+lbl_outport_ch.config(font=('Arial', 10))
+entry_outport_ch = ttk.Entry(root, text=outport_ch, width = 5)
+entry_outport_ch.grid(row=2, column=3, sticky='e')
+entry_outport_ch.config(font=('Arial', 10))
+
+
 lbl_inport_cc = ttk.Label(root, text='CC')
-lbl_inport_cc.grid(row=2, column=0, sticky='e')
+lbl_inport_cc.grid(row=3, column=0, sticky='e')
 lbl_inport_cc.config(font=('Arial', 10))
 entry_inport_cc = ttk.Entry(root, text=inport_cc, width = 5)
-entry_inport_cc.grid(row=2, column=1, sticky='e')
+entry_inport_cc.grid(row=3, column=1, sticky='e')
 entry_inport_cc.config(font=('Arial', 10))
-lbl_outport_cc = ttk.Label(root, text='CC')
-lbl_outport_cc.grid(row=2, column=2, sticky='e')
+lbl_outport_cc = ttk.Label(root, text='→    CC')
+lbl_outport_cc.grid(row=3, column=2, sticky='e')
 lbl_outport_cc.config(font=('Arial', 10))
 entry_outport_cc = ttk.Entry(root, text=outport_cc, width = 5)
-entry_outport_cc.grid(row=2, column=3, sticky='e')
+entry_outport_cc.grid(row=3, column=3, sticky='e')
 entry_outport_cc.config(font=('Arial', 10))
 
 s=ttk.Style()  
@@ -11065,16 +11085,16 @@ s.configure('blue.TButton', font=('Arial', 12, 'bold'), foreground='blue')
 s.configure('red.TButton', font=('Arial', 12, 'bold'), foreground='red')
 
 btn_start = ttk.Button(root, text='START', style='blue.TButton', command=start_cmd)
-btn_start.grid(row=3, column=0, padx=10, pady=5, columnspan=2, sticky='news')
+btn_start.grid(row=4, column=0, padx=10, pady=5, columnspan=2, sticky='news')
 
 btn_stop  = ttk.Button(root, text='STOP', style='red.TButton', command=stop_cmd)
-btn_stop.grid(row=3, column=2, padx=10, pady=5, columnspan=2, sticky='news')
+btn_stop.grid(row=4, column=2, padx=10, pady=5, columnspan=2, sticky='news')
 btn_stop['state'] = 'disabled'
 
 lbl_status_msg = ttk.Label(root, textvariable=status_msg)
 lbl_status_msg.config(font=('Arial', 10))
 lbl_status_msg.configure(anchor="center")
 lbl_status_msg.configure(background='white')
-lbl_status_msg.grid(row=4, column=0, columnspan=4, sticky='news')
+lbl_status_msg.grid(row=5, column=0, columnspan=4, sticky='news')
 
 root.mainloop()

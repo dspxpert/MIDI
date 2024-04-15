@@ -1,6 +1,8 @@
 {
-    "Inport"       : "Circuit",
+    "Inport"       : "USB MIDI",
+    "Inport_ch"    : 1,
     "Inport_cc"    : 7,
-    "Outport"      : "loop",
+    "Outport"      : "loopMIDI",
+    "Outport_ch"   : 1,    
     "Outport_cc"   : 2
 }
