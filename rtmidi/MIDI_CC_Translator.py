@@ -10971,7 +10971,7 @@ def start_cmd():
             (msg, dt) = msg_and_dt
             if (msg[0] & 0x0F) == (inport_ch.get()-1):                    # channel matched inport_ch
                 msg[0] = (msg[0] & 0xF0) | (outport_ch.get()-1)           # change channel to outport_ch
-                if (msg[0] & 0xF0) == 0xB0 and msg[1] == inport_cc.get(): # change cc      to output_cc
+                if (msg[0] & 0xF0) == 0xB0 and msg[1] == inport_cc.get(): # change cc      to outport_cc
                     msg[1] = outport_cc.get()
             # convert the command integer to a hex so it's easier to read
             midi_out.send_message(msg)
