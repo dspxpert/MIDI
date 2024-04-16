@@ -10954,15 +10954,15 @@ def start_cmd():
     midi_in.open_port(combo_inport.current())
     midi_out.open_port(combo_outport.current())
     #print('MIDI ports open')
-    #print('MIDI translation start')
-    status_msg.set('MIDI translation start')
+    #print('MIDI Translation Start')
+    status_msg.set('MIDI Translation Start')
     
     while True:
         root.update()
 
         if stop == 1:
-            #print('MIDI translation stop')
-            status_msg.set('MIDI translation stop')
+            #print('MIDI Translation Stop')
+            status_msg.set('MIDI Translation Stop')
             return
         
         msg_and_dt = midi_in.get_message()
@@ -10971,7 +10971,7 @@ def start_cmd():
             (msg, dt) = msg_and_dt
             if (msg[0] & 0x0F) == (inport_ch.get()-1):                    # channel matched inport_ch
                 msg[0] = (msg[0] & 0xF0) | (outport_ch.get()-1)           # change channel to outport_ch
-                if (msg[0] & 0xF0) == 0xB0 and msg[1] == inport_cc.get(): # change cc      to outport_cc
+                if (msg[0] & 0xF0) == 0xB0 and msg[1] == inport_cc.get(): # change cc      to output_cc
                     msg[1] = outport_cc.get()
             # convert the command integer to a hex so it's easier to read
             midi_out.send_message(msg)
@@ -11020,7 +11020,7 @@ if outport_index < 0:
     outport_index = 0
 
 root = tk.Tk()
-root.title('MIDI CC Translator')
+root.title('MIDI CC Translator v1.0')
 root.iconbitmap(default=ICON_PATH)
 root.resizable(False, False)
 
